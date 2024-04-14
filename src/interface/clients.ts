@@ -7,5 +7,5 @@ export interface Client {
     email: string;
     firstname: string;
     lastname: string;
-    dateAdded?: Timestamp | string;
+    dateAdded: Timestamp | string;
 }

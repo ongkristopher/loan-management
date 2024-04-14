@@ -9,27 +9,30 @@ import {
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
 import { AddNewLoanEntryComponent } from "./add-new-loan-entry-component/add-new-loan-entry-component";
+import { getLoanEntries } from "@/firebase/requests/loan-entries/get-loan-entries";
+import { LoanEntries } from "@/interface/loan-entries";
 
 export default function LoanEntryManagement() {
-  const [loanEntries, setLoanEntries] = useState([]);
+  const [loanEntries, setLoanEntries] = useState<LoanEntries[]>([]);
 
-  //   const fetchData = () => {
-  //     const itemsData = [];
-  //     setLoanEntries(itemsData);
-  //   };
+    const fetchData = async () => {
+      const itemsData = await getLoanEntries();
+      setLoanEntries(itemsData);
+    };
 
   useEffect(() => {
-    // fetchData();
+    fetchData();
   }, []);
 
   const handleNewClientAdded = () => {
-    // fetchData();
+    fetchData();
   };
 
   return (
@@ -53,25 +56,28 @@ export default function LoanEntryManagement() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {/* {loanEntries.map((client, index) => (
+            {loanEntries.map((loanEntry, index) => (
               <TableRow key={index}>
                 <TableCell>
                   <div className="font-medium">
-                    {client.firstname + " " + client.lastname}
+                    {loanEntry.client.firstname + " " + loanEntry.client.lastname}
                   </div>
                   <div className="hidden text-sm text-muted-foreground md:inline">
-                    {client.email}
+                    {loanEntry.client.email}
                   </div>
                 </TableCell>
                 <TableCell className="text-center">
-                  {client.contactNumber}
+                  {loanEntry.terms}
                 </TableCell>
-                <TableCell className="text-center">{client.address}</TableCell>
+                <TableCell className="text-center">{loanEntry.rate}</TableCell>
                 <TableCell className="text-center">
-                  {client.dateAdded as string}
+                  {loanEntry.totalLoanAmount.toLocaleString()}
+                </TableCell>
+                <TableCell className="text-center">
+                  {loanEntry.date as string}
                 </TableCell>
               </TableRow>
-            ))} */}
+            ))}
           </TableBody>
         </Table>
       </CardContent>
