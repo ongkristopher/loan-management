@@ -42,6 +42,7 @@ const formSchema = z.object({
   lastname: z.string().min(1, {
     message: "Lastname is required",
   }),
+  dateAdded: z.string()
 });
 
 export function AddNewClientComponent({ onNewClientAdded }: AddNewClientProps) {
@@ -58,6 +59,7 @@ export function AddNewClientComponent({ onNewClientAdded }: AddNewClientProps) {
       email: "",
       firstname: "",
       lastname: "",
+      dateAdded: "",
     },
   });
 

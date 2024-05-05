@@ -14,18 +14,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getClients } from "@/firebase/requests/clients/get-clients";
+import { Client } from "@/interface/clients";
 import { useEffect, useState } from "react";
-import { AddNewLoanEntryComponent } from "./add-new-loan-entry-component/add-new-loan-entry-component";
-import { getLoanEntries } from "@/firebase/requests/loan-entries/get-loan-entries";
-import { LoanEntries } from "@/interface/loan-entries";
+import { AddNewClientComponent } from "../add-new-client-component/add-new-client-component";
 
-export default function LoanEntryManagement() {
-  const [loanEntries, setLoanEntries] = useState<LoanEntries[]>([]);
+export default function Clients() {
+  const [clients, setClients] = useState<Client[]>([]);
 
-    const fetchData = async () => {
-      const itemsData = await getLoanEntries();
-      setLoanEntries(itemsData);
-    };
+  const fetchData = async () => {
+    const itemsData = await getClients();
+    setClients(itemsData);
+  };
 
   useEffect(() => {
     fetchData();
@@ -39,42 +39,38 @@ export default function LoanEntryManagement() {
     <Card className="xl:col-span-2">
       <CardHeader className="flex flex-row items-center">
         <div className="grid gap-2">
-          <CardTitle>Loan Entries</CardTitle>
-          <CardDescription>List of clients' loans.</CardDescription>
+          <CardTitle>Clients</CardTitle>
+          <CardDescription>List of clients.</CardDescription>
         </div>
-        <AddNewLoanEntryComponent onNewClientAdded={handleNewClientAdded} />
+        <AddNewClientComponent onNewClientAdded={handleNewClientAdded} />
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Client</TableHead>
-              <TableHead>Loan Term</TableHead>
-              <TableHead>Interest Rate</TableHead>
-              <TableHead>Loan Amount</TableHead>
-              <TableHead>Loan Date</TableHead>
+              <TableHead className="text-center">Contact Number</TableHead>
+              <TableHead className="text-center">Address</TableHead>
+              <TableHead className="text-center">Date Added</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {loanEntries.map((loanEntry, index) => (
+            {clients.map((client, index) => (
               <TableRow key={index}>
                 <TableCell>
                   <div className="font-medium">
-                    {loanEntry.client.firstname + " " + loanEntry.client.lastname}
+                    {client.firstname + " " + client.lastname}
                   </div>
                   <div className="hidden text-sm text-muted-foreground md:inline">
-                    {loanEntry.client.email}
+                    {client.email}
                   </div>
                 </TableCell>
                 <TableCell className="text-center">
-                  {loanEntry.terms}
+                  {client.contactNumber}
                 </TableCell>
-                <TableCell className="text-center">{loanEntry.rate}</TableCell>
+                <TableCell className="text-center">{client.address}</TableCell>
                 <TableCell className="text-center">
-                  {loanEntry.totalLoanAmount.toLocaleString()}
-                </TableCell>
-                <TableCell className="text-center">
-                  {loanEntry.date as string}
+                  {client.dateAdded as string}
                 </TableCell>
               </TableRow>
             ))}

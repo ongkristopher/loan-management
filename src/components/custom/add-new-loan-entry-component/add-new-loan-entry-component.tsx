@@ -27,20 +27,15 @@ import { HandCoins } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { ClientsCombobox } from "../dropdowns/clients";
 
 interface AddNewClientProps {
   onNewClientAdded: () => void;
 }
 
 const formSchema = z.object({
-  address: z.string().min(3).trim(),
-  contactNumber: z.string().min(11).trim(),
-  email: z.string().email().trim().toLowerCase(),
-  firstname: z.string().min(1, {
-    message: "Firstname is required",
-  }),
-  lastname: z.string().min(1, {
-    message: "Lastname is required",
+  client: z.string().min(1, {
+    message: "Client is required",
   }),
 });
 
@@ -55,26 +50,23 @@ export function AddNewLoanEntryComponent({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      address: "",
-      contactNumber: "",
-      email: "",
-      firstname: "",
-      lastname: "",
+      client: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const client: Client = values;
-    client.dateAdded = serverTimestamp() as Timestamp;
+    console.log(values);
+    // const client: Client = values;
+    // client.dateAdded = serverTimestamp() as Timestamp;
 
-    const { result, error } = await addNewClient("loanEntries", client);
+    // const { result, error } = await addNewClient("loanEntries", client);
 
-    if (error) {
-      return console.log(error);
-    } else {
-      onNewClientAdded();
-      setOpen(false);
-    }
+    // if (error) {
+    //   return console.log(error);
+    // } else {
+    //   onNewClientAdded();
+    //   setOpen(false);
+    // }
   }
 
   return (
@@ -94,88 +86,17 @@ export function AddNewLoanEntryComponent({
             <form className="grid gap-4 grid-cols-2">
               <FormField
                 control={form.control}
-                name="firstname"
+                name="client"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Firstname</FormLabel>
+                    <FormLabel>Client</FormLabel>
                     <FormControl>
-                      <Input placeholder="Juan" {...field} />
+                      <ClientsCombobox />
                     </FormControl>
-                    <FormDescription>
-                      This is legal first name of the client.
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="lastname"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Lastname</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Dela Cruz" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      This is legal last name of the client.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="contactNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Contact Number</FormLabel>
-                    <FormControl>
-                      <Input placeholder="+639..." {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      This is active contact number of the client.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="example@test.com" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      This is active email address of the client.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="grid grid-cols-subgrid gap-4 col-span-full">
-                <div className="col-span-full">
-                  <FormField
-                    control={form.control}
-                    name="address"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Address</FormLabel>
-                        <FormControl>
-                          <Textarea placeholder="Complete address" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          This is the address of the client.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
             </form>
           </Form>
         </div>

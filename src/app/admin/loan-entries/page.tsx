@@ -1,6 +1,6 @@
 "use client";
 import Header from "@/components/custom/header/header";
-import LoanEntryManagement from "@/components/custom/loan-entries";
+import LoanEntryManagement from "@/components/custom/lists/loan-entries";
 export default function LoanEntries() {
   return (
     <div className="flex min-h-screen w-full flex-col">
