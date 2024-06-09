@@ -91,7 +91,7 @@ export function AddNewLoanEntryComponent({
                   <FormItem>
                     <FormLabel>Client</FormLabel>
                     <FormControl>
-                      <ClientsCombobox />
+                      <ClientsCombobox {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

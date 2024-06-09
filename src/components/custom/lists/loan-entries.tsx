@@ -40,7 +40,7 @@ export default function LoanEntryManagement() {
       <CardHeader className="flex flex-row items-center">
         <div className="grid gap-2">
           <CardTitle>Loan Entries</CardTitle>
-          <CardDescription>List of clients' loans.</CardDescription>
+          <CardDescription>List of clients&apos; loans.</CardDescription>
         </div>
         <AddNewLoanEntryComponent onNewClientAdded={handleNewClientAdded} />
       </CardHeader>
@@ -60,15 +60,15 @@ export default function LoanEntryManagement() {
               <TableRow key={index}>
                 <TableCell>
                   <div className="font-medium">
-                    {loanEntry.client.firstname + " " + loanEntry.client.lastname}
+                    {loanEntry.client.firstname +
+                      " " +
+                      loanEntry.client.lastname}
                   </div>
                   <div className="hidden text-sm text-muted-foreground md:inline">
                     {loanEntry.client.email}
                   </div>
                 </TableCell>
-                <TableCell className="text-center">
-                  {loanEntry.terms}
-                </TableCell>
+                <TableCell className="text-center">{loanEntry.terms}</TableCell>
                 <TableCell className="text-center">{loanEntry.rate}</TableCell>
                 <TableCell className="text-center">
                   {loanEntry.totalLoanAmount.toLocaleString()}

@@ -1,7 +1,5 @@
 "use client";
 
-import { Check, ChevronsUpDown } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -9,6 +7,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "@/components/ui/command";
 import {
   Popover,
@@ -18,44 +17,54 @@ import {
 import { getClients } from "@/firebase/requests/clients/get-clients";
 import { Client } from "@/interface/clients";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { useEffect, useState, forwardRef } from "react";
 
-export function ClientsCombobox() {
+interface ClientsComboboxProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export const ClientsCombobox = forwardRef<
+  HTMLButtonElement,
+  ClientsComboboxProps
+>(({ value, onChange }, ref) => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState<Client["firstname"]>("");
-  const [clients, setClients] = useState<Client[]>([]); // Ensure clients state is initialized with an empty array
+  const [clients, setClients] = useState<Client[]>([]);
+
+  const fetchData = async () => {
+    try {
+      const data = await getClients();
+      if (Array.isArray(data)) {
+        setClients(data);
+      } else {
+        setClients([]);
+      }
+    } catch (error) {
+      setClients([]);
+    }
+  };
 
   useEffect(() => {
-    // declare the async data fetching function
-    const fetchData = async () => {
-      // get the data from the api
-      const data = await getClients();
-      // set state with the result
-      setClients(data);
-    };
-
-    // call the function
-    fetchData()
-      // make sure to catch any error
-      .catch(console.error);
+    fetchData();
   }, []);
 
   return (
     <>
       {clients.length === 0 ? (
-        <div>Loading...</div> // Render a loading indicator while fetching data
+        <div>No clients found, add one in the Record</div>
       ) : (
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button
+              ref={ref}
               variant="outline"
               role="combobox"
               aria-expanded={open}
               className="w-[200px] justify-between"
             >
               {value
-                ? clients.find((client) => client.firstname === value)
-                    ?.firstname
+                ? clients.find((client) => client.id === value)?.fullname
                 : "Select client..."}
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
@@ -63,37 +72,38 @@ export function ClientsCombobox() {
           <PopoverContent className="w-[200px] p-0">
             <Command>
               <CommandInput placeholder="Search client..." />
-              <CommandEmpty>No client found.</CommandEmpty>
-              {clients.length ? (
-                <CommandGroup>
-                  {clients.map((client) => (
-                    <CommandItem
-                      key={client.id}
-                      value={client.firstname}
-                      onSelect={(currentValue) => {
-                        setValue(currentValue === value ? "" : currentValue);
-                        setOpen(false);
-                      }}
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          value === client.firstname
-                            ? "opacity-100"
-                            : "opacity-0"
-                        )}
-                      />
-                      {client.firstname}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              ) : (
-                <div>Loading...</div>
-              )}
+              <CommandList>
+                {clients.length === 0 ? (
+                  <CommandEmpty>No client found.</CommandEmpty>
+                ) : (
+                  <CommandGroup>
+                    {clients.map((client) => (
+                      <CommandItem
+                        key={client.id}
+                        value={client.fullname} // Use fullname for display in CommandItem
+                        onSelect={() => {
+                          onChange(client.id as string); // Use client.id for selection
+                          setOpen(false);
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            value === client.id ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                        {client.fullname}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                )}
+              </CommandList>
             </Command>
           </PopoverContent>
         </Popover>
       )}
     </>
   );
-}
+});
+
+ClientsCombobox.displayName = "ClientsCombobox";

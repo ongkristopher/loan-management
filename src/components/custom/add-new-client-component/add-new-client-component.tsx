@@ -42,6 +42,7 @@ const formSchema = z.object({
   lastname: z.string().min(1, {
     message: "Lastname is required",
   }),
+  fullname: z.string(),
   dateAdded: z.string()
 });
 
@@ -59,12 +60,14 @@ export function AddNewClientComponent({ onNewClientAdded }: AddNewClientProps) {
       email: "",
       firstname: "",
       lastname: "",
+      fullname: "",
       dateAdded: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const client: Client = values;
+    client.fullname = client.firstname + " " + client.lastname;
     client.dateAdded = serverTimestamp() as Timestamp;
 
     const { result, error } = await addNewClient("clients", client);
