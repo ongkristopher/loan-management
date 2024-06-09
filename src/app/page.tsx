@@ -3,14 +3,25 @@
 import {firebase_auth} from "@/firebase/config";
 import { Button } from "@/components/ui/button";
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    firebase_auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        router.push("/admin");
+      }
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const loginWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(firebase_auth, provider);
-      // Redirect or do something else upon successful login
     } catch (error) {
       console.error(error);
     }

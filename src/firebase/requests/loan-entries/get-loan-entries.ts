@@ -1,4 +1,4 @@
-import firebase_app from '@/firebase/config';
+import { firebase_app } from '@/firebase/config';
 import { Client } from '@/interface/clients';
 import { LoanEntries } from '@/interface/loan-entries';
 import { timeFormatter } from '@/lib/utils';

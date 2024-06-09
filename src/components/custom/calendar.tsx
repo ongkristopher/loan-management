@@ -3,10 +3,25 @@ import { Card, CardContent } from "@/components/ui/card";
 import { addNewCalendarEvent } from "@/firebase/requests/calendar/add-new-calendar-event";
 import { getCalendarEvents } from "@/firebase/requests/calendar/get-calendar-events";
 import { Event } from "@/interface/calendar-events";
+import styled from "@emotion/styled";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import { useEffect, useState } from "react";
+
+export const StyleWrapper = styled.div`
+  .fc .fc-scrollgrid-section-sticky > * {
+    background: #fff0;
+  }
+
+  .fc-today-button {
+    text-transform: capitalize;
+  }
+
+  .fc-h-event .fc-event-title {
+    text-overflow: ellipsis;
+  }
+`;
 
 export default function Calendar() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -49,14 +64,17 @@ export default function Calendar() {
   return (
     <div>
       <Card className="xl:col-span-2">
-        <CardContent>
-          <FullCalendar
-            plugins={[dayGridPlugin, interactionPlugin]}
-            initialView="dayGridMonth"
-            events={events}
-            dateClick={handleDateClick}
-            eventClick={handleEventClick}
-          />
+        <CardContent className="pt-6">
+          <StyleWrapper>
+            <FullCalendar
+              plugins={[dayGridPlugin, interactionPlugin]}
+              initialView="dayGridMonth"
+              events={events}
+              height={"auto"}
+              dateClick={handleDateClick}
+              eventClick={handleEventClick}
+            />
+          </StyleWrapper>
         </CardContent>
       </Card>
     </div>

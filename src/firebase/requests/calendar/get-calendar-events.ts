@@ -1,4 +1,4 @@
-import firebase_app from '@/firebase/config';
+import { firebase_app } from '@/firebase/config';
 import { Event } from '@/interface/calendar-events';
 import { getDocs, collection, getFirestore } from "firebase/firestore";
 

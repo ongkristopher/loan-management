@@ -1,4 +1,4 @@
-import firebase_app from '@/firebase/config';
+import { firebase_app } from '@/firebase/config';
 import { AppSettings } from '@/interface/app-settings';
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 
